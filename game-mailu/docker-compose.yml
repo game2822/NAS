@@ -1,5 +1,3 @@
-version: "3.7"
-
 x-mailu-environment: &mailu-environment
   SECRET_KEY: "WID8K4KXKD9TCG5Z"
   SUBNET: "192.168.203.0/24"
@@ -91,6 +89,8 @@ services:
     restart: always
     volumes:
       - ${APP_DATA_DIR}/redis:/data
+    networks:
+      - mailu_internal
     depends_on:
       - resolver
 
@@ -118,6 +118,7 @@ services:
 
     networks:
       - default
+      - mailu_internal
       - radicale
 
     volumes:
@@ -137,7 +138,9 @@ services:
     restart: always
     environment:
       <<: *mailu-environment
-
+    networks:
+      mailu_internal:
+        ipv4_address: 192.168.203.254
 
   # ---------------------------------------------------------
   # Mailu administration
@@ -153,6 +156,9 @@ services:
     volumes:
       - ${APP_DATA_DIR}/data:/data
       - ${APP_DATA_DIR}/dkim:/dkim
+
+    networks:
+      - mailu_internal
 
     depends_on:
       - redis
@@ -175,7 +181,7 @@ services:
       - ${APP_DATA_DIR}/overrides/dovecot:/overrides:ro
 
     networks:
-      - default
+      - mailu_internal
       - fts_attachments
 
     depends_on:
@@ -194,6 +200,9 @@ services:
 
     environment:
       <<: *mailu-environment
+
+    networks:
+      - mailu_internal
 
     volumes:
       - ${APP_DATA_DIR}/mailqueue:/queue
@@ -214,6 +223,7 @@ services:
     restart: always
 
     networks:
+      - mailu_internal
       - oletools
 
     depends_on:
@@ -260,7 +270,7 @@ services:
       <<: *mailu-environment
 
     networks:
-      - default
+      - mailu_internal
       - oletools
       - clamav
 
@@ -328,6 +338,9 @@ services:
     environment:
       <<: *mailu-environment
 
+    networks:
+      - mailu_internal
+
     volumes:
       - ${APP_DATA_DIR}/data/fetchmail:/data
 
@@ -343,11 +356,13 @@ services:
 # -----------------------------------------------------------
 
 networks:
-
   default:
+    external: true
+    name: umbrel_main_network
+
+  mailu_internal:
     driver: bridge
     ipam:
-      driver: default
       config:
         - subnet: 192.168.203.0/24
 
