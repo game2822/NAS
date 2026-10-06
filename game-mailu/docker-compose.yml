@@ -71,6 +71,11 @@ x-mailu-environment: &mailu-environment
 services:
 
 
+  app_proxy:
+      environment:
+        APP_HOST: game-mailu_front_1
+        APP_PORT: 80
+
   # ---------------------------------------------------------
   # External dependencies
   # ---------------------------------------------------------
@@ -109,6 +114,7 @@ services:
       - "4190:4190"
 
     networks:
+      - default
       - mailu_internal
       - radicale
 
