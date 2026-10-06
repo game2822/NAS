@@ -92,7 +92,7 @@ services:
     volumes:
       - ${APP_DATA_DIR}/redis:/data
     depends_on:
-      - resolve
+      - resolver
 
 
   # ---------------------------------------------------------
