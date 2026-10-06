@@ -5,7 +5,7 @@ x-mailu-environment: &mailu-environment
   HOSTNAMES: "mail.byblume.fr"
   POSTMASTER: "admin"
 
-  TLS_FLAVOR: "letsencrypt"
+  TLS_FLAVOR: "notls"
 
   AUTH_RATELIMIT_IP: "5/hour"
   AUTH_RATELIMIT_USER: "50/day"
@@ -107,6 +107,7 @@ services:
       <<: *mailu-environment
 
     ports:
+      - "8088:80"
       - "25:25"
       - "465:465"
       - "587:587"
@@ -117,7 +118,6 @@ services:
       - "4190:4190"
 
     networks:
-      - default
       - mailu_internal
       - radicale
 
