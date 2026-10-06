@@ -70,15 +70,6 @@ x-mailu-environment: &mailu-environment
 
 services:
 
-  # ---------------------------------------------------------
-  # Umbrel reverse proxy
-  # ---------------------------------------------------------
-
-  app_proxy:
-    environment:
-      APP_HOST: game-mailu_front_1
-      APP_PORT: 80
-
 
   # ---------------------------------------------------------
   # External dependencies
