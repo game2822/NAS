@@ -92,9 +92,7 @@ services:
     volumes:
       - ${APP_DATA_DIR}/redis:/data
     depends_on:
-      - resolver
-    dns:
-      - 192.168.203.254
+      - resolve
 
 
   # ---------------------------------------------------------
@@ -129,9 +127,6 @@ services:
     depends_on:
       - resolver
 
-    dns:
-      - 192.168.203.254
-
 
   # ---------------------------------------------------------
   # DNS resolver
@@ -140,13 +135,8 @@ services:
   resolver:
     image: ghcr.io/mailu/unbound:2024.06
     restart: always
-
     environment:
       <<: *mailu-environment
-
-    networks:
-      default:
-        ipv4_address: 192.168.203.254
 
 
   # ---------------------------------------------------------
@@ -167,9 +157,6 @@ services:
     depends_on:
       - redis
       - resolver
-
-    dns:
-      - 192.168.203.254
 
 
   # ---------------------------------------------------------
@@ -196,9 +183,6 @@ services:
       - fts_attachments
       - resolver
 
-    dns:
-      - 192.168.203.254
-
 
   # ---------------------------------------------------------
   # SMTP / Postfix
@@ -219,9 +203,6 @@ services:
       - front
       - resolver
 
-    dns:
-      - 192.168.203.254
-
 
   # ---------------------------------------------------------
   # OLE tools
@@ -238,9 +219,6 @@ services:
     depends_on:
       - resolver
 
-    dns:
-      - 192.168.203.254
-
 
   # ---------------------------------------------------------
   # Full-text attachment extraction
@@ -256,9 +234,6 @@ services:
 
     depends_on:
       - resolver
-
-    dns:
-      - 192.168.203.254
 
     healthcheck:
       test:
@@ -299,9 +274,6 @@ services:
       - oletools
       - antivirus
       - resolver
-
-    dns:
-      - 192.168.203.254
 
 
   # ---------------------------------------------------------
@@ -364,9 +336,6 @@ services:
       - smtp
       - imap
       - resolver
-
-    dns:
-      - 192.168.203.254
 
 
 # -----------------------------------------------------------
