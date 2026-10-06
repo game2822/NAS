@@ -1,0 +1,32 @@
+manifestVersion: 1
+id: game-mailu
+name: Mailu
+tagline: A full-featured mail server for your Umbrel
+icon: https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse2.mm.bing.net%2Fth%2Fid%2FOIP.loCwsn7u3iAGhlFClCumdgHaHa%3Fr%3D0%26pid%3DApi&f=1&ipt=d3b5513eedf667e09f13f3e49b57078bad0c7c3f6bbe1a12a1df35d346c27552&ipo=images
+category: Communication
+version: "1.0.0"
+port: 80
+
+description: >-
+  Mailu is a complete mail server stack with SMTP, IMAP, antispam,
+  antivirus, web administration, and webmail support.
+
+developer: Mailu
+website: https://mailu.io
+submitter: Game28
+submission: ""
+repo: ""
+support: ""
+
+gallery:
+  - https://i.imgur.com/yyVG0Jb.jpeg
+  - https://i.imgur.com/yyVG0Jb.jpeg
+  - https://i.imgur.com/yyVG0Jb.jpeg
+
+releaseNotes: >-
+  Initial Umbrel Community App release.
+
+dependencies: []
+path: ""
+defaultUsername: ""
+defaultPassword: ""
