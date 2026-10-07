@@ -1,6 +1,9 @@
 x-mailu-environment: &mailu-environment
   SECRET_KEY: "WID8K4KXKD9TCG5Z"
-  SUBNET: "192.168.203.0/24"
+
+  # Umbrel main network
+  SUBNET: "10.21.0.0/16"
+
   DOMAIN: "byblume.fr"
   HOSTNAMES: "mail.byblume.fr"
   POSTMASTER: "admin"
@@ -70,23 +73,33 @@ x-mailu-environment: &mailu-environment
 
 services:
 
+  # ---------------------------------------------------------
+  # Umbrel app proxy
+  # ---------------------------------------------------------
 
   app_proxy:
-      environment:
-        APP_HOST: game-mailu_front_1
-        APP_PORT: 80
+    environment:
+      APP_HOST: game-mailu_front_1
+      APP_PORT: 80
+
 
   # ---------------------------------------------------------
-  # External dependencies
+  # Redis
   # ---------------------------------------------------------
 
   redis:
     image: redis:alpine
     restart: always
+
     volumes:
       - ${APP_DATA_DIR}/redis:/data
+
     networks:
-      - mailu_internal
+      - default
+
+    dns:
+      - 10.21.255.254
+
     depends_on:
       - resolver
 
@@ -115,8 +128,10 @@ services:
 
     networks:
       - default
-      - mailu_internal
       - radicale
+
+    dns:
+      - 10.21.255.254
 
     volumes:
       - ${APP_DATA_DIR}/certs:/certs
@@ -133,11 +148,14 @@ services:
   resolver:
     image: ghcr.io/mailu/unbound:2024.06
     restart: always
+
     environment:
       <<: *mailu-environment
+
     networks:
-      mailu_internal:
-        ipv4_address: 192.168.203.254
+      default:
+        ipv4_address: 10.21.255.254
+
 
   # ---------------------------------------------------------
   # Mailu administration
@@ -155,7 +173,10 @@ services:
       - ${APP_DATA_DIR}/dkim:/dkim
 
     networks:
-      - mailu_internal
+      - default
+
+    dns:
+      - 10.21.255.254
 
     depends_on:
       - redis
@@ -178,8 +199,11 @@ services:
       - ${APP_DATA_DIR}/overrides/dovecot:/overrides:ro
 
     networks:
-      - mailu_internal
+      - default
       - fts_attachments
+
+    dns:
+      - 10.21.255.254
 
     depends_on:
       - front
@@ -199,7 +223,10 @@ services:
       <<: *mailu-environment
 
     networks:
-      - mailu_internal
+      - default
+
+    dns:
+      - 10.21.255.254
 
     volumes:
       - ${APP_DATA_DIR}/mailqueue:/queue
@@ -220,8 +247,10 @@ services:
     restart: always
 
     networks:
-      - mailu_internal
       - oletools
+
+    dns:
+      - 10.21.255.254
 
     depends_on:
       - resolver
@@ -238,6 +267,9 @@ services:
 
     networks:
       - fts_attachments
+
+    dns:
+      - 10.21.255.254
 
     depends_on:
       - resolver
@@ -267,9 +299,12 @@ services:
       <<: *mailu-environment
 
     networks:
-      - mailu_internal
+      - default
       - oletools
       - clamav
+
+    dns:
+      - 10.21.255.254
 
     volumes:
       - ${APP_DATA_DIR}/filter:/var/lib/rspamd
@@ -336,7 +371,10 @@ services:
       <<: *mailu-environment
 
     networks:
-      - mailu_internal
+      - default
+
+    dns:
+      - 10.21.255.254
 
     volumes:
       - ${APP_DATA_DIR}/data/fetchmail:/data
@@ -353,17 +391,13 @@ services:
 # -----------------------------------------------------------
 
 networks:
+
+  # IMPORTANT:
+  # This is Umbrel's existing network.
+  # Do NOT create a custom mailu_internal network.
   default:
     external: true
     name: umbrel_main_network
-
-  mailu_internal:
-    driver: bridge
-    driver_opts:
-      com.docker.network.bridge.enable_icc: "true"
-    ipam:
-      config:
-        - subnet: 192.168.203.0/24
 
   radicale:
     driver: bridge
