@@ -359,6 +359,8 @@ networks:
 
   mailu_internal:
     driver: bridge
+    driver_opts:
+      com.docker.network.bridge.enable_icc: "true"
     ipam:
       config:
         - subnet: 192.168.203.0/24
