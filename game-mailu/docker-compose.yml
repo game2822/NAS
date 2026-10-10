@@ -4,6 +4,15 @@ x-mailu-environment: &mailu-environment
   # Umbrel main network
   SUBNET: "10.21.0.0/16"
 
+  PORT_25: true
+  PORT_143: true
+  PORT_993: true
+  PORT_110: true
+  PORT_995: true
+  PORT_465: true
+  PORT_587: true
+  PORT_4190: true
+
   DOMAIN: "byblume.fr"
   HOSTNAMES: "mail.byblume.fr"
   POSTMASTER: "admin"
